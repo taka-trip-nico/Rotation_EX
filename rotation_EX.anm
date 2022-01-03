@@ -1,12 +1,10 @@
---track0:‰ñ“]Ž²1,-360,360,0,0.1
---track1:‰ñ“]Ž²2,-360,360,0,0.1
---track2:‰ñ“]Ž²3,-360,360,0,0.1
+--track0:‰ñ“]Ž²1,-3600,3600,0,0.01
+--track1:‰ñ“]Ž²2,-3600,3600,0,0.01
+--track2:‰ñ“]Ž²3,-3600,3600,0,0.01
 --dialog:‰ñ“]Ž²1,axis[1]="x";‰ñ“]Ž²2,axis[2]="y";‰ñ“]Ž²3,axis[3]="z";
 
-debug_print(axis[2])
-
---ŽlŽÌŒÜ“üBx:’lAy:ŠÛ‚ß•B
-function fix(x, y)
+-- ŽlŽÌŒÜ“üBx:’lAy:ŠÛ‚ß•B
+function round(x, y)
     x = math.floor(x * y + 0.5) / y
     return x
 end
@@ -23,8 +21,8 @@ function cross(a, b)
     return c
 end
 
--- ‰ñ“]s—ñ‚Ì‘ã“üBaxis:Ž²(string)
-function make_matrix(ax,n)
+-- ‰ñ“]s—ñ‚Ì‘ã“üBaxis:Ž²("x","y","z")
+function make_matrix(ax, n)
     local m = {}
     if ax == "x" then
         m[1] = {1, 0, 0}
@@ -42,26 +40,24 @@ function make_matrix(ax,n)
     return m
 end
 
-r={}
+r = {}
 r[1] = obj.track0 * math.pi / 180
 r[2] = obj.track1 * math.pi / 180
 r[3] = obj.track2 * math.pi / 180
-m1 = make_matrix(axis[3],3)
-m2 = make_matrix(axis[2],2)
-m3 = make_matrix(axis[1],1)
+m1 = make_matrix(axis[3], 3)
+m2 = make_matrix(axis[2], 2)
+m3 = make_matrix(axis[1], 1)
 mr = {}
 mr = cross(cross(m1, m2), m3)
 
 obj.ry = math.asin(mr[1][3])
 
-debug_print(string.format("math.cos(obj.ry)=%f", math.cos(obj.ry)))
-if fix(math.cos(obj.ry), 10 ^ 10) == 0 then
+if round(math.cos(obj.ry), 10 ^ 10) == 0 then
     obj.rz = 0
     sx = mr[2][1]
     cx = mr[2][2]
-
-    sx = fix(sx, 10 ^ 10)
-    cx = fix(cx, 10 ^ 10)
+    sx = round(sx, 10 ^ 10)
+    cx = round(cx, 10 ^ 10)
 
     if sx > 0 then
         if cx >= 0 then
@@ -83,14 +79,10 @@ if fix(math.cos(obj.ry), 10 ^ 10) == 0 then
         end
     end
 else
-    sx = -1*mr[2][3] / math.cos(obj.ry)
+    sx = -1 * mr[2][3] / math.cos(obj.ry)
     cx = mr[3][3] / math.cos(obj.ry)
-
-    sx = fix(sx, 10 ^ 10)
-    cx = fix(cx, 10 ^ 10)
-
-    debug_print(string.format("sx=%+2.10f", sx))
-    debug_print(string.format("cx=%+2.10f", cx))
+    sx = round(sx, 10 ^ 10)
+    cx = round(cx, 10 ^ 10)
 
     if sx > 0 then
         obj.rx = math.acos(cx)
@@ -108,14 +100,12 @@ else
         end
     end
 
-    sz = -1*mr[1][2] / math.cos(obj.ry)
+    sz = -1 * mr[1][2] / math.cos(obj.ry)
     cz = mr[1][1] / math.cos(obj.ry)
 
-    sz = fix(sz, 10 ^ 10)
-    cz = fix(cz, 10 ^ 10)
+    sz = round(sz, 10 ^ 10)
+    cz = round(cz, 10 ^ 10)
 
-    debug_print(string.format("sz=%+2.20f", sz))
-    debug_print(string.format("cz=%+2.10f", cz))
     if sz > 0 then
         obj.rz = math.acos(cz)
     elseif sz < 0 then
@@ -132,12 +122,7 @@ else
         end
     end
 end
-debug_print(string.format("obj.rx=%f", obj.rx))
-debug_print(string.format("obj.ry=%f", obj.ry))
-debug_print(string.format("obj.rz=%f", obj.rz))
+
 obj.rx = obj.rx * 180 / math.pi
 obj.ry = obj.ry * 180 / math.pi
 obj.rz = obj.rz * 180 / math.pi
-debug_print(string.format("obj.rx=%f", obj.rx))
-debug_print(string.format("obj.ry=%f", obj.ry))
-debug_print(string.format("obj.rz=%f", obj.rz))
