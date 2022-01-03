@@ -1,0 +1,103 @@
+--track0:XŽ²‰ñ“],-360,360,0,0.1
+--track1:YŽ²‰ñ“],-360,360,0,0.1
+--track2:ZŽ²‰ñ“],-360,360,0,0.1
+
+-- ŽlŽÌŒÜ“üBx:’lAy:ŠÛ‚ß•B
+function fix(x,y)
+    x=math.floor(x*y+0.5)/y
+    return x
+end
+
+x = obj.track0 * math.pi / 180
+y = obj.track1 * math.pi / 180
+z = obj.track2 * math.pi / 180
+
+obj.ry = math.asin(math.sin(x) * math.sin(z) + math.cos(x) * math.cos(z) * math.sin(y))
+
+debug_print(string.format("math.cos(obj.ry)=%f",math.cos(obj.ry)))
+if fix(math.cos(obj.ry),10^10) == 0 then
+    obj.rz = 0
+    sx = math.cos(y) * math.sin(z)
+    cx = math.sin(y)
+
+    sx=fix(sx,10^10)
+    cx=fix(cx,10^10)
+
+    if sx > 0 then
+        if cx >= 0 then
+            obj.rx = math.acos(cx)
+        elseif cx < 0 then
+            obj.rx = math.acos(cx)
+        end
+    elseif sx < 0 then
+        if cx >= 0 then
+            obj.rx = math.asin(sx)
+        elseif cx < 0 then
+            obj.rx = 2 * math.pi - math.acos(cx)
+        end
+    elseif sx == 0 then
+        if cx > 0 then
+            obj.rx = 0
+        elseif cx < 0 then
+            obj.rx = math.pi
+        end
+    end
+else
+    sx = (math.cos(z) * math.sin(x) - math.cos(x) * math.sin(y) * math.sin(z)) / math.cos(obj.ry)
+    cx = math.cos(x) * math.cos(y) / math.cos(obj.ry)
+    
+    sx=fix(sx,10^10)
+    cx=fix(cx,10^10)
+
+    debug_print(string.format("sx=%+2.10f", sx))
+    debug_print(string.format("cx=%+2.10f", cx))
+
+    if sx > 0 then
+        obj.rx = math.acos(cx)
+    elseif sx < 0 then
+        if cx >= 0 then
+            obj.rx = math.asin(sx)
+        elseif cx < 0 then
+            obj.rx = 2 * math.pi - math.acos(cx)
+        end
+    elseif sx == 0 then
+        if cx > 0 then
+            obj.rx = 0
+        elseif cx < 0 then
+            obj.rx = math.pi
+        end
+    end
+
+    sz = (math.cos(x) * math.sin(z) - math.cos(z) * math.sin(x) * math.sin(y)) / math.cos(obj.ry)
+    cz = math.cos(y) * math.cos(z) / math.cos(obj.ry)
+    
+    sz=fix(sz,10^10)
+    cz=fix(cz,10^10)
+
+    debug_print(string.format("sz=%+2.20f", sz))
+    debug_print(string.format("cz=%+2.10f", cz))
+    if sz > 0 then
+        obj.rz = math.acos(cz)
+    elseif sz < 0 then
+        if cz >= 0 then
+            obj.rz = math.asin(sz)
+        elseif cz < 0 then
+            obj.rz = 2 * math.pi - math.acos(cz)
+        end
+    elseif sz == 0 then
+        if cz > 0 then
+            obj.rz = 0
+        elseif cz < 0 then
+            obj.rz = math.pi
+        end
+    end
+end
+debug_print(string.format("obj.rx=%f", obj.rx))
+debug_print(string.format("obj.ry=%f", obj.ry))
+debug_print(string.format("obj.rz=%f", obj.rz))
+obj.rx = obj.rx * 180 / math.pi
+obj.ry = obj.ry * 180 / math.pi
+obj.rz = obj.rz * 180 / math.pi
+debug_print(string.format("obj.rx=%f", obj.rx))
+debug_print(string.format("obj.ry=%f", obj.ry))
+debug_print(string.format("obj.rz=%f", obj.rz))
