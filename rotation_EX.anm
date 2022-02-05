@@ -1,8 +1,11 @@
---track0:‰ñ“]²1,-3600,3600,0,0.01
---track1:‰ñ“]²2,-3600,3600,0,0.01
---track2:‰ñ“]²3,-3600,3600,0,0.01
---dialog:‰ñ“]²1,axis[1]="x";‰ñ“]²2,axis[2]="y";‰ñ“]²3,axis[3]="z";
-
+--track0:‰ñ“]²1,-360,360,0,0.01
+--track1:‰ñ“]²2,-360,360,0,0.01
+--track2:‰ñ“]²3,-360,360,0,0.01
+--dialog:‰ñ“]²1,axx1='x';‰ñ“]²2,axx2='y';‰ñ“]²3,axx3='z';
+axis = {}
+axis[1]=axx1
+axis[2]=axx2
+axis[3]=axx3
 -- lÌŒÜ“üBx:’lAy:ŠÛ‚ß•B
 function round(x, y)
     x = math.floor(x * y + 0.5) / y
@@ -21,18 +24,18 @@ function cross(a, b)
     return c
 end
 
--- ‰ñ“]s—ñ‚Ì‘ã“üBaxis:²("x","y","z")
+-- ‰ñ“]s—ñ‚Ì‘ã“üBaxis:²('x','y','z')
 function make_matrix(ax, n)
     local m = {}
-    if ax == "x" then
+    if ax == 'x' then
         m[1] = {1, 0, 0}
         m[2] = {0, math.cos(r[n]), -math.sin(r[n])}
         m[3] = {0, math.sin(r[n]), math.cos(r[n])}
-    elseif ax == "y" then
+    elseif ax == 'y' then
         m[1] = {math.cos(r[n]), 0, math.sin(r[n])}
         m[2] = {0, 1, 0}
         m[3] = {-math.sin(r[n]), 0, math.cos(r[n])}
-    elseif ax == "z" then
+    elseif ax == 'z' then
         m[1] = {math.cos(r[n]), -math.sin(r[n]), 0}
         m[2] = {math.sin(r[n]), math.cos(r[n]), 0}
         m[3] = {0, 0, 1}
